@@ -41,6 +41,8 @@ merge the boundary away. Left alone, that instinct is the most common way a
 ```
 docs/student/GROUND-RULES.md   # the shared rules of the room — read this first
 docs/student/<context>.md      # what your team owns, open questions, who to talk to
+docs/student/CONTROL-EVENTS.md # the five fixed-shape facilitator events — the
+                                #   one thing here that ISN'T yours to design
 docs/ATTENDEE-QUICKSTART.md    # environment setup
 
 sam/skus.json                  # the real SKU catalog — shared, read-only reference data
@@ -51,17 +53,20 @@ sam/<context>/template.yaml    # your stack: starts as a hello-world placeholder
 sam/<context>/src/app.py       # your Lambda handler: starts as a hello-world placeholder
 sam/<context>/CLAUDE.md        # that context's specific boundary rules — read this
 sam/<context>/samconfig.toml   # deploy config, already pinned — no flags needed
-
-sam/cli/                       # shared admin tooling: catalogs, and a generic
-                                #   `publish` command for testing your EventBridge
-                                #   wiring. It has no opinion on your event shapes.
 ```
+
+There is no admin CLI in this repo — the facilitator's own tooling injects the
+five control events (`docs/student/CONTROL-EVENTS.md`) from outside. Watching
+the bus or testing your own wiring is plain AWS CLI (`aws logs tail`, `aws
+events put-events`), already installed — see `sam/README.md`.
 
 ## Working conventions
 
 - **Design your events with the team on the other end, then write the agreed shape
   down in both teams' `CLAUDE.md`.** There is no central schema file — that
-  conversation *is* the exercise.
+  conversation *is* the exercise. The one exception is the five facilitator
+  control events in `docs/student/CONTROL-EVENTS.md` — fixed shape, not up for
+  negotiation, but still your team's call whether to react to them.
 - **EventBridge delivers at-least-once.** Design for a redelivered event, don't
   assume it can't happen.
 - **One deploy captain per context.** CloudFormation can't take two concurrent

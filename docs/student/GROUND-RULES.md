@@ -39,10 +39,18 @@ Each folder has a `CLAUDE.md`. Point your AI assistant at it first.
   `sam build && sam deploy`.
 - **The starter template's placeholder event (`SayHelloEvent`) is the same
   name in all five contexts on purpose.** Every team's starter Lambda is
-  listening for it, so testing your own wiring with `just publish` will make
-  everyone else's placeholder Lambda log a line too — that's expected, not a
-  bug. Once you design your own real events, give them names only your team
-  would plausibly publish.
+  listening for it, so testing your own wiring (see "Checking your work"
+  below) will make everyone else's placeholder Lambda log a line too — that's
+  expected, not a bug. Once you design your own real events, give them names
+  only your team would plausibly publish.
+- **Five events are fixed, not yours to design: `OrderPlaced`,
+  `RoastQueueBuildRequested`, `RoastQueueRunRequested`, `FulfillmentRunRequested`,
+  `ResetRequested`.** Only the facilitator publishes these, at specific
+  moments, from their own admin tooling — you don't run these yourself and
+  there's no CLI for them in this repo. See
+  [CONTROL-EVENTS.md](./CONTROL-EVENTS.md) for their exact payload so you can
+  write an `EventBridgeRule` that matches them. If you need one fired for a
+  reason not obvious from the room's flow, ask the facilitator.
 
 ## Working with your AI assistant
 
@@ -53,11 +61,20 @@ right there. Read what it writes.
 
 ## Checking your work
 
-From `sam/cli/`:
+Plain AWS CLI — no admin tooling needed, no venv, nothing to install beyond
+what's already in the container:
 
 ```bash
-just logs                                    # every event on the bus — leave it running
-just publish SayHelloEvent '{"msg": "hi"}'   # trigger every team's starter Lambda
+# every event on the bus — leave this running in a second terminal
+aws logs tail /aws/events/roastery-bus --follow
+
+# trigger every team's starter Lambda, to prove your own EventBridge rule fires
+aws events put-events --entries '[{
+  "Source": "manual-test",
+  "DetailType": "SayHelloEvent",
+  "Detail": "{}",
+  "EventBusName": "roastery-bus"
+}]'
 ```
 
 ## If you're stuck

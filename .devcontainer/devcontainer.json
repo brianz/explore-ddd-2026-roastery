@@ -26,21 +26,10 @@
     "ghcr.io/devcontainers/features/aws-cli:1": {}
   },
 
-  // The workspace folder is a bind mount of the repo on disk, so anything the
-  // container writes under it is also visible on the host, and vice versa. That's
-  // fine for source, but sam/cli/.venv is a build artifact: if you've ever run the
-  // CLI natively on your Mac (see CLAUDE.md's "Running things"), its binaries and
-  // symlinks are host-native and will not resolve inside the container. This volume
-  // shadows just that one directory so the container always builds its own,
-  // container-native venv there — your host .venv underneath is untouched.
-  //
   // initializeCommand runs on the HOST, before the container is created, and
   // guarantees .env exists (even empty) so --env-file below never fails to find
   // it — including on the very first build, before you've received a credential.
   "initializeCommand": "touch \"${localWorkspaceFolder}/.env\"",
-  "mounts": [
-    "source=${localWorkspaceFolderBasename}-sam-cli-venv,target=${containerWorkspaceFolder}/sam/cli/.venv,type=volume"
-  ],
 
   // --env-file reads .env DIRECTLY at `docker run` time — it does not depend on
   // VS Code's own process environment at all, unlike the `${localEnv:...}`

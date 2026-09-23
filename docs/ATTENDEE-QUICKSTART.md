@@ -36,20 +36,25 @@ Codex, or none at all).
 
 ## The commands you'll use
 
-From `sam/cli/` (the virtualenv is already set up):
+The shared catalogs are plain JSON files — read them directly, no tool needed:
 
 ```bash
-just --list                                             # every command
-just list-skus                                          # the real SKU catalog
-just list-green-lots                                    # the real green-lot catalog
-just list-roastables                                    # the real roastable catalog
-just logs                                                # watch every event on the shared bus (leave running)
-just publish SayHelloEvent '{"msg": "hi"}'               # test your starter Lambda's wiring
+cat sam/skus.json
+cat sam/green_lots.json
+cat sam/roastables.json
 ```
+
+Watching the bus and testing your own EventBridge wiring is plain AWS CLI —
+see "Checking your work" in
+[`docs/student/GROUND-RULES.md`](./student/GROUND-RULES.md).
 
 There is no seed data and no shared starting state to reset — every context begins
 empty, and what (if anything) gets written to a table is up to the design your team
-lands on.
+lands on. The facilitator injects a handful of fixed-shape events at specific
+moments (new orders, roast-day and fulfillment triggers, a room-wide reset) from
+their own admin tooling, not from anything in this repo — see
+[`docs/student/CONTROL-EVENTS.md`](./student/CONTROL-EVENTS.md) for their exact
+shape so you can write a rule that matches them.
 
 To deploy your context after you change it (from `sam/<your-context>/`):
 

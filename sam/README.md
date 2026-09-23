@@ -34,15 +34,8 @@ just a different bus.
 ## The shared catalogs
 
 `sam/skus.json`, `sam/green_lots.json`, and `sam/roastables.json` are real product,
-green-lot, and roastable data — not sandbox filler. Read them with the CLI:
-
-```bash
-cd sam/cli
-just install          # once, per machine
-just list-skus
-just list-green-lots
-just list-roastables
-```
+green-lot, and roastable data — not sandbox filler. They're plain JSON; read them
+directly (`cat sam/skus.json`, or open them in your editor).
 
 If your Lambda needs to read one of these files directly, note that SAM's `CodeUri`
 only packages files inside that context's own `src/` folder — a JSON file one level
@@ -55,29 +48,39 @@ symlink target.
 
 Every starter template ships with one placeholder Lambda listening for a
 `SayHelloEvent` on the shared bus. Before you've built anything real, you can
-prove the wiring works:
+prove the wiring works with plain AWS CLI — no admin tooling needed:
 
 ```bash
-just publish SayHelloEvent '{"msg": "hi"}'
-just logs   # in a second terminal, leave it running
+aws events put-events --entries '[{
+  "Source": "manual-test",
+  "DetailType": "SayHelloEvent",
+  "Detail": "{}",
+  "EventBusName": "roastery-bus"
+}]'
+
+aws logs tail /aws/events/roastery-bus --follow   # in a second terminal, leave it running
 ```
 
 Because the placeholder event name is the same in every context's starter
 template, this will make *every* team's placeholder Lambda log a line, not just
 yours — that's expected, and only spans your own group's bus (group2 never
 sees group 1's events, or vice versa). Once you design your own real events,
-give them names only your team would plausibly publish.
+give them names only your team would plausibly publish. If you're group2,
+point both commands at `roastery-bus-2` instead.
 
-`just logs` tails every event on the shared bus (`aws logs tail
-/aws/events/roastery-bus --follow` under the hood) — the single most useful thing
-to leave open in a second terminal while you work. If you're group2,
-`BUS=roastery-bus-2 just logs` (and `BUS=roastery-bus-2 just publish ...`) point
-every CLI command at your bus instead.
+## What's yours to design
 
-## What the CLI does not do
+There is no predefined event catalog and no predefined table schema anywhere in
+this repo. What events exist, what they carry, and what each context remembers is
+entirely what your team and the others decide — see `docs/student/GROUND-RULES.md`.
 
-`sam/cli/roastery_admin.py` has no opinion on any context's event shapes or table
-schema — there aren't any predefined ones. It only knows the shared catalogs and
-how to publish an arbitrary event for testing. Everything else — what events exist,
-what they carry, what each context remembers — is what your team and the others
-decide.
+## The exception: facilitator control events
+
+Five events — `OrderPlaced`, `RoastQueueBuildRequested`, `RoastQueueRunRequested`,
+`FulfillmentRunRequested`, `ResetRequested` — fire at specific moments in the
+session, published only by the facilitator. The one thing in this workshop
+that isn't up to your team to design is their shape. The full, real
+EventBridge payload for each one (so you can write an `EventBridgeRule` that
+matches it), when each one fires, and what's expected of `ResetRequested`
+(every context clears its own table — nothing does that for you) are in
+[`docs/student/CONTROL-EVENTS.md`](../docs/student/CONTROL-EVENTS.md).
