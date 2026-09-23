@@ -1,0 +1,44 @@
+# Dependencies — three separate npm projects, three separate installs. The root one
+# is the only one students touch; the other two live under facilitator/.
+node_modules/
+
+# Build output.
+facilitator/dashboard/dist/
+facilitator/infra/cdk.out/
+*.tsbuildinfo
+
+# Generated esbuild entry shims. Build output, not source — see entryShim() in
+# facilitator/infra/lib/topology.ts for why they exist at all.
+facilitator/infra/cdk.entry/
+
+# Compiled CDK output. That project compiles with tsc before synth (see its
+# cdk.json), so the emitted .js/.d.ts sit next to their sources.
+facilitator/infra/**/*.js
+facilitator/infra/**/*.d.ts
+!facilitator/infra/jest.config.js
+
+# Harness output. `--json=<path>` and build logs are both run artifacts.
+*.log
+.harness-baseline.txt
+
+# Local environment. Never commit account ids, table names for a real account,
+# or credentials — the AWS names this repo needs are pinned in topology.ts and
+# are not secret, but a .env is where a real one would end up. `.envrc` is local
+# direnv configuration and is personal to whoever runs the deployed side.
+.env
+.env.*
+.envrc
+.venv/
+
+# macOS.
+.DS_Store
+**/cdk.out
+
+# SAM build output — sam/ is the decoupled Python/SAM sandbox, built with
+# `sam build` rather than CDK. samconfig.toml files ARE source now: each stack's
+# pins the documented stack/bus/region convention so a bare `sam build && sam
+# deploy` does the right thing — see sam/README.md "Every stack gets a
+# samconfig.toml".
+sam/**/.aws-sam/
+__pycache__/
+*.pyc

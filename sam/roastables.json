@@ -1,0 +1,36 @@
+{
+  "roastables": [
+    {
+      "roastableId": "rstbl_eth_guji",
+      "kind": "SINGLE",
+      "greenLotId": "glot_eth_guji_4471",
+      "targetRoastLevel": "LIGHT",
+      "intendedUse": "FILTER"
+    },
+    {
+      "roastableId": "rstbl_house_preblend",
+      "kind": "PRE_BLEND",
+      "components": [
+        {"greenLotId": "glot_bra_cerrado_881", "proportionBps": 5000},
+        {"greenLotId": "glot_col_huila_2213", "proportionBps": 3000},
+        {"greenLotId": "glot_sum_mandheling_57", "proportionBps": 2000}
+      ],
+      "targetRoastLevel": "MEDIUM",
+      "intendedUse": "FILTER"
+    },
+    {
+      "roastableId": "rstbl_col_for_espresso",
+      "kind": "SINGLE",
+      "greenLotId": "glot_col_huila_2213",
+      "targetRoastLevel": "MEDIUM",
+      "intendedUse": "ESPRESSO"
+    },
+    {
+      "roastableId": "rstbl_bra_for_espresso",
+      "kind": "SINGLE",
+      "greenLotId": "glot_bra_cerrado_881",
+      "targetRoastLevel": "MEDIUM_DARK",
+      "intendedUse": "ESPRESSO"
+    }
+  ]
+}

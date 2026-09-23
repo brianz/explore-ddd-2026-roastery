@@ -1,0 +1,15 @@
+# Pinned so a bare `sam build && sam deploy` from this directory does the
+# right thing — stack name and bus name are the documented convention, not
+# a per-person choice. See sam/README.md.
+version = 0.1
+
+[default.deploy.parameters]
+stack_name = "ddd-roastery-inventory-and-packaging"
+resolve_s3 = true
+no_confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "BusName=roastery-bus"
+
+[default.global.parameters]
+stack_name = "ddd-roastery-inventory-and-packaging"
+region = "us-west-2"

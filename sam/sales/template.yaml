@@ -1,0 +1,72 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Sales — starter stack. Deploys on its own: it finds the shared
+  event bus by name (the parameter below) and does nothing else yet.
+
+  TODO, as a team: decide what this context owns, what events it listens
+  for and publishes, and what (if anything) it needs to remember in
+  DynamoDB — see docs/student/sales.md and this folder's CLAUDE.md.
+  This template gives you one placeholder Lambda wired to one placeholder
+  EventBridge rule ("SayHelloEvent") and one placeholder DynamoDB table
+  with a single-attribute HASH key. Replace all three once you've decided
+  what you actually need; nothing here is meant to survive the session.
+
+Parameters:
+  BusName:
+    Type: String
+    Default: roastery-bus
+    Description: Must match the BusName the bus stack was deployed with.
+
+Resources:
+  HelloTable:
+    # Placeholder only — one HASH key, nothing else. Design your own
+    # table(s) and key schema once you know what this context needs to
+    # remember, then delete this one.
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: roastery-sales-hello
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  SalesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: roastery-sales
+      CodeUri: src/
+      Handler: app.handler
+      Runtime: python3.14
+      Timeout: 10
+      MemorySize: 128
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref HelloTable
+          CONTEXT_NAME: sales
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref HelloTable
+      Events:
+        # Placeholder trigger only. The same detail-type is wired into all
+        # five starter templates on purpose — see GROUND-RULES.md. Replace
+        # it with whatever event(s) this context should actually react to,
+        # once your team has agreed what they are and what shape they carry.
+        SayHello:
+          Type: EventBridgeRule
+          Properties:
+            EventBusName: !Ref BusName
+            Pattern:
+              detail-type:
+                - SayHelloEvent
+
+Outputs:
+  FunctionName:
+    Value: !Ref SalesFunction
+  TableName:
+    Value: !Ref HelloTable
+  LogGroupName:
+    Value: !Sub /aws/lambda/${SalesFunction}

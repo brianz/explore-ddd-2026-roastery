@@ -1,0 +1,36 @@
+{
+  "greenLots": [
+    {
+      "greenLotId": "glot_eth_guji_4471",
+      "origin": "Ethiopia Guji, Hambela washing station",
+      "harvestYear": 2026,
+      "onHand": 64000,
+      "threshold": 60000,
+      "moistureBps": 1080
+    },
+    {
+      "greenLotId": "glot_col_huila_2213",
+      "origin": "Colombia Huila, Pitalito co-op",
+      "harvestYear": 2026,
+      "onHand": 142000,
+      "threshold": 138000,
+      "moistureBps": 1120
+    },
+    {
+      "greenLotId": "glot_bra_cerrado_881",
+      "origin": "Brazil Cerrado Mineiro, natural",
+      "harvestYear": 2025,
+      "onHand": 124000,
+      "threshold": 120000,
+      "moistureBps": 1030
+    },
+    {
+      "greenLotId": "glot_sum_mandheling_57",
+      "origin": "Sumatra Mandheling, wet-hulled",
+      "harvestYear": 2025,
+      "onHand": 62000,
+      "threshold": 60000,
+      "moistureBps": 1290
+    }
+  ]
+}

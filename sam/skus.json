@@ -1,0 +1,44 @@
+{
+  "skus": [
+    {
+      "skuId": "sku_eth_guji_350g",
+      "name": "Ethiopia Guji 350g",
+      "packageSize": "RETAIL_350G",
+      "onHand": 40,
+      "sourceRoastables": [
+        {"roastableId": "rstbl_eth_guji", "proportionBps": 10000}
+      ]
+    },
+    {
+      "skuId": "sku_house_350g",
+      "name": "House Blend 350g",
+      "packageSize": "RETAIL_350G",
+      "onHand": 60,
+      "sourceRoastables": [
+        {"roastableId": "rstbl_house_preblend", "proportionBps": 10000}
+      ]
+    },
+    {
+      "skuId": "sku_espresso_350g",
+      "name": "Espresso Blend 350g (post-roast)",
+      "packageSize": "RETAIL_350G",
+      "onHand": 3,
+      "blendId": "blend_espresso",
+      "sourceRoastables": [
+        {"roastableId": "rstbl_col_for_espresso", "proportionBps": 6000},
+        {"roastableId": "rstbl_bra_for_espresso", "proportionBps": 4000}
+      ]
+    },
+    {
+      "skuId": "sku_espresso_2kg",
+      "name": "Espresso Blend 2kg wholesale",
+      "packageSize": "WHOLESALE_2KG",
+      "onHand": 0,
+      "blendId": "blend_espresso",
+      "sourceRoastables": [
+        {"roastableId": "rstbl_col_for_espresso", "proportionBps": 6000},
+        {"roastableId": "rstbl_bra_for_espresso", "proportionBps": 4000}
+      ]
+    }
+  ]
+}
