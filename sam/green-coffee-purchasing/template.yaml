@@ -17,6 +17,15 @@ Parameters:
     Type: String
     Default: roastery-bus
     Description: Must match the BusName the bus stack was deployed with.
+  GroupSuffix:
+    Type: String
+    Default: ""
+    Description: >
+      Only needed for a split-room run (two independent groups on two
+      buses). Appended to every physical resource name below so this same
+      template can deploy twice into one account without colliding — e.g.
+      "-2" for the second group, paired with BusName=roastery-bus-2. Leave
+      blank for a single-group run.
 
 Resources:
   HelloTable:
@@ -25,7 +34,7 @@ Resources:
     # remember, then delete this one.
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: roastery-green-coffee-purchasing-hello
+      TableName: !Sub roastery-green-coffee-purchasing-hello${GroupSuffix}
       AttributeDefinitions:
         - AttributeName: id
           AttributeType: S
@@ -37,7 +46,7 @@ Resources:
   GreenCoffeePurchasingFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: roastery-green-coffee-purchasing
+      FunctionName: !Sub roastery-green-coffee-purchasing${GroupSuffix}
       CodeUri: src/
       Handler: app.handler
       Runtime: python3.14

@@ -12,23 +12,26 @@
    cloud IDE would, so doing this before the session means you're not spending
    workshop time on it.
 
-No AWS account and no Anthropic account to bring — those are provided (see below).
+No AWS account to bring — that's provided (see below). **Bring your own coding
+assistant.** The Claude Code CLI and VS Code extension are preinstalled as a
+convenience, but nothing here configures or authenticates one — sign in with
+whatever assistant and account you already use (Claude Code, Cursor, Copilot,
+Codex, or none at all).
 
 ## Get coding
 
 1. **Download your `.env` file** from the link your facilitator gives you at the
    start of the session, and save it as `.env` directly in the root of this repo
-   (same folder as `.devcontainer/`). It contains the shared AWS credential and
-   model ids — everyone in the room uses the same one.
+   (same folder as `.devcontainer/`). It contains the shared AWS credential —
+   everyone in the room uses the same one.
 2. If you haven't already, **Dev Containers: Reopen in Container**. (If you built
    it before arriving per the prerequisites above, this reopens instantly; if the
    `.env` file wasn't there yet when you first built it, use **Dev Containers:
    Rebuild Container** instead so the values actually load.)
-3. Start Claude Code — either way works, both are already signed in via Amazon
-   Bedrock (there is no login):
-   - **VS Code:** open the Claude Code panel from the sidebar.
-   - **Terminal:** run `claude`.
-4. You're ready. Your team's code lives in `sam/<your-context>/` — that folder plus
+3. Confirm the credential landed: `aws sts get-caller-identity` in the integrated
+   terminal.
+4. Sign in to your own coding assistant, however it normally works.
+5. You're ready. Your team's code lives in `sam/<your-context>/` — that folder plus
    the shared `sam/skus.json` and the bus name are the only things you touch.
 
 ## The commands you'll use
@@ -61,8 +64,6 @@ The full command reference is in `sam/README.md`.
 
 ## Good to know
 
-- **Web search is off.** Claude Code's web search doesn't work over Bedrock. Reading
-  files, running commands, and fetching a specific URL all work fine.
 - **Don't use `sam build --use-container`.** If you symlink one of the shared
   catalog files into your `src/` folder (SAM's `CodeUri` only packages files inside
   that folder, so a symlink is the usual trick to reuse them without copying), a

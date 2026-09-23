@@ -1,6 +1,10 @@
 # Pinned so a bare `sam build && sam deploy` from this directory does the
 # right thing — stack name and bus name are the documented convention, not
 # a per-person choice. See sam/README.md.
+#
+# Two deploy profiles: `default` (one-group run) and `group2` (the second
+# group in a split-room run, on its own bus) — `sam deploy --config-env group2`.
+# See CLAUDE.md and sam/README.md for when you'd use group2.
 version = 0.1
 
 [default.deploy.parameters]
@@ -12,4 +16,15 @@ parameter_overrides = "BusName=roastery-bus"
 
 [default.global.parameters]
 stack_name = "ddd-roastery-green-coffee-purchasing"
+region = "us-west-2"
+
+[group2.deploy.parameters]
+stack_name = "ddd-roastery-green-coffee-purchasing-2"
+resolve_s3 = true
+no_confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "BusName=roastery-bus-2 GroupSuffix=-2"
+
+[group2.global.parameters]
+stack_name = "ddd-roastery-green-coffee-purchasing-2"
 region = "us-west-2"

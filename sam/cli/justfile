@@ -1,6 +1,7 @@
 python := ".venv/bin/python"
 pip := ".venv/bin/pip"
-bus := "roastery-bus"
+# Override for a split-room run: `BUS=roastery-bus-2 just logs`.
+bus := env_var_or_default("BUS", "roastery-bus")
 
 # list available recipes
 default:
@@ -25,8 +26,9 @@ list-roastables:
 
 # publish an arbitrary event onto the shared bus, e.g.:
 #   just publish SayHelloEvent '{"msg": "hi"}'
+#   BUS=roastery-bus-2 just publish SayHelloEvent '{"msg": "hi"}'
 publish detail-type detail='{}':
-    {{python}} roastery_admin.py publish --detail-type {{detail-type}} --detail '{{detail}}'
+    {{python}} roastery_admin.py --bus-name {{bus}} publish --detail-type {{detail-type}} --detail '{{detail}}'
 
 # tail every event on the shared bus — leave running in a second terminal
 logs:

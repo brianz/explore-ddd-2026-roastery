@@ -2,11 +2,12 @@
 //
 // Every attendee runs this on their own laptop via "Dev Containers: Reopen in
 // Container", which gives everyone an identical machine with Python 3.14, the
-// AWS SAM CLI, `just`, the AWS CLI, and Claude Code (both the CLI and the VS Code
-// extension) already installed — and Claude Code already pointed at Amazon
-// Bedrock. There is nothing to log into: the same AWS credentials that run
-// `sam deploy` also power inference. See docs/ATTENDEE-QUICKSTART.md for what
-// an attendee actually does.
+// AWS SAM CLI, `just`, and the AWS CLI already installed, plus the AWS
+// credentials that run `sam deploy` (see below). Bring your own coding
+// assistant and your own login/API key — nothing here configures one. The
+// Claude Code CLI and VS Code extension are installed as a convenience if you
+// want to use Claude Code specifically, but neither is wired to any backend.
+// See docs/ATTENDEE-QUICKSTART.md for what an attendee actually does.
 //
 // This file is JSONC — comments are allowed.
 {
@@ -32,36 +33,31 @@
   // symlinks are host-native and will not resolve inside the container. This volume
   // shadows just that one directory so the container always builds its own,
   // container-native venv there — your host .venv underneath is untouched.
+  //
+  // initializeCommand runs on the HOST, before the container is created, and
+  // guarantees .env exists (even empty) so --env-file below never fails to find
+  // it — including on the very first build, before you've received a credential.
+  "initializeCommand": "touch \"${localWorkspaceFolder}/.env\"",
   "mounts": [
     "source=${localWorkspaceFolderBasename}-sam-cli-venv,target=${containerWorkspaceFolder}/sam/cli/.venv,type=volume"
   ],
 
-  // Bedrock routing that is always correct regardless of who deploys. The secret
-  // values themselves are never written here — `${localEnv:VAR}` pulls each one from
-  // the environment of whatever is resolving this file (the shell you launched VS
-  // Code from). Your facilitator gives you these four values at the start of the
-  // session.
-  //
-  // KNOWN GOTCHA: `${localEnv:VAR}` only resolves at the moment VS Code's process
-  // starts — if VS Code was already running when you exported these vars, a new
-  // window reuses the existing process's original (unset) environment and every
-  // var below silently resolves to empty. Fully quit VS Code, re-export, then
-  // relaunch from that exact shell.
-  //
-  // If a var is unset, `${localEnv:VAR}` resolves to an empty string rather than
-  // failing — postCreate.sh warns and skips the model lock file when that happens.
-  //
+  // --env-file reads .env DIRECTLY at `docker run` time — it does not depend on
+  // VS Code's own process environment at all, unlike the `${localEnv:...}`
+  // mechanism this replaced (that one silently resolved to empty whenever VS
+  // Code was already running before you exported the vars — a real failure we
+  // hit during testing, not a hypothetical one). Editing .env requires "Dev
+  // Containers: Rebuild Container", not just Reopen, to take effect — Docker
+  // only reads the file at container creation. .env carries just the AWS
+  // credential (AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY) that runs `sam deploy`.
+  "runArgs": ["--env-file", "${localWorkspaceFolder}/.env"],
+
   // The whole workshop runs in ONE region — this must match the `region` pinned in
-  // every sam/*/samconfig.toml (currently us-west-2). Change all of them together,
-  // and confirm the chosen models + prompt caching are available there.
+  // every sam/*/samconfig.toml (currently us-west-2). Change all of them together
+  // if that's ever not true.
   "remoteEnv": {
-    "CLAUDE_CODE_USE_BEDROCK": "1",
     "AWS_REGION": "us-west-2",
-    "AWS_DEFAULT_REGION": "us-west-2",
-    "AWS_ACCESS_KEY_ID": "${localEnv:AWS_ACCESS_KEY_ID}",
-    "AWS_SECRET_ACCESS_KEY": "${localEnv:AWS_SECRET_ACCESS_KEY}",
-    "ANTHROPIC_MODEL": "${localEnv:ANTHROPIC_MODEL}",
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "${localEnv:ANTHROPIC_DEFAULT_HAIKU_MODEL}"
+    "AWS_DEFAULT_REGION": "us-west-2"
   },
 
   "customizations": {

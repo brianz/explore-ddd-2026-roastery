@@ -5,13 +5,13 @@ that keep 30 people from stepping on each other.
 
 ## Where you work
 
-| Team | Your folder |
-|---|---|
-| Sales | `sam/sales/` |
-| Inventory & Packaging | `sam/inventory-and-packaging/` |
-| Roastery | `sam/roastery/` |
+| Team                    | Your folder                    |
+| ----------------------- | ------------------------------ |
+| Sales                   | `sam/sales/`                   |
+| Inventory & Packaging   | `sam/inventory-and-packaging/` |
+| Roastery                | `sam/roastery/`                |
 | Green Coffee Purchasing | `sam/green-coffee-purchasing/` |
-| Fulfillment | `sam/fulfillment/` |
+| Fulfillment             | `sam/fulfillment/`             |
 
 Each folder has a `CLAUDE.md`. Point your AI assistant at it first.
 
@@ -46,8 +46,8 @@ Each folder has a `CLAUDE.md`. Point your AI assistant at it first.
 
 ## Working with your AI assistant
 
-Tell it the boundary, not just the feature: *"Read `sam/<your-folder>/CLAUDE.md`.
-Only edit files in that folder."* Left alone, an assistant will happily merge
+Tell it the boundary, not just the feature: _"Read `sam/<your-folder>/CLAUDE.md`.
+Only edit files in that folder."_ Left alone, an assistant will happily merge
 five contexts into one model, or reach into another team's data because it's
 right there. Read what it writes.
 

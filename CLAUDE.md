@@ -5,6 +5,14 @@ coffee roastery (`sam/sales/`, `sam/inventory-and-packaging/`, `sam/roastery/`,
 `sam/green-coffee-purchasing/`, `sam/fulfillment/`), deployed independently on
 AWS SAM, integrating only through events on one shared EventBridge bus.
 
+**If the room is large enough to split into two independent groups**, there are
+two of these "universes" running in parallel on two separate buses
+(`roastery-bus` and `roastery-bus-2`) — your facilitator will tell you which
+one you're in. Every template takes a `GroupSuffix` parameter and every
+`samconfig.toml` has a `group2` deploy profile for exactly this; see
+`sam/README.md`. It changes nothing about what you build — only which bus and
+physical resource names your stack uses.
+
 **Nothing here is a finished implementation.** Every context folder starts as a
 walking-skeleton stub: a template that deploys a Lambda triggered by a placeholder
 EventBridge event and prints "hello world," plus a placeholder DynamoDB table with
